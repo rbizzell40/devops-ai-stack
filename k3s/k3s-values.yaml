@@ -1,0 +1,29 @@
+global:
+  ingress:
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    hosts:
+      - host: n8n.localhost
+        paths:
+          - path: /
+            pathType: Prefix
+      - host: ollama.localhost
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: n8n-tls
+        hosts:
+          - n8n.localhost
+      - secretName: ollama-tls
+        hosts:
+          - ollama.localhost
+
+n8n:
+  service:
+    type: ClusterIP
+
+ollama:
+  service:
+    type: ClusterIP

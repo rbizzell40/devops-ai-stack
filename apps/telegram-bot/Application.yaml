@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: telegram-bot
+  namespace: argocd
+spec:
+  destination:
+    namespace: messaging
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: telegram-bot
+    helm:
+      valueFiles:
+      - global/values.yaml
+    repoURL: https://my-charts.example.com
+    targetRevision: 0.1.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

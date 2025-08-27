@@ -1,0 +1,89 @@
+{
+  "name": "MCP Auto-Remediate",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{ json: { prompt: 'Deployment xyz has crashed. Suggest an action.' } }];"
+      },
+      "id": "2",
+      "name": "Build Prompt",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "http://ollama:11434/api/generate",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{ \"model\": \"llama3\", \"prompt\": {{$json[\"prompt\"]}}, \"stream\": false }"
+      },
+      "id": "3",
+      "name": "Query Ollama",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "command": "=kubectl rollout restart deployment/xyz"
+      },
+      "id": "4",
+      "name": "Restart Deployment",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#alerts",
+        "text": "🚨 Ollama suggested action taken: Deployment restarted."
+      },
+      "id": "5",
+      "name": "Send Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "🚨 MCP Action: Deployment xyz was restarted due to an alert.",
+        "additionalFields": {}
+      },
+      "id": "6",
+      "name": "Send Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1250, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [[{"node": "Build Prompt","type": "main","index": 0}]]
+    },
+    "Build Prompt": {
+      "main": [[{"node": "Query Ollama","type": "main","index": 0}]]
+    },
+    "Query Ollama": {
+      "main": [[{"node": "Restart Deployment","type": "main","index": 0}]]
+    },
+    "Restart Deployment": {
+      "main": [
+        [{"node": "Send Slack Alert","type": "main","index": 0}],
+        [{"node": "Send Telegram Alert","type": "main","index": 0}]
+      ]
+    }
+  }
+}
