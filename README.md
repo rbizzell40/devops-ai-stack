@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 📊 DevOps AI Stack Demo: Narrated Walkthrough
 
 This guide supports the `devops-ai-stack-demo.pptx` presentation with talking points and explanations for each slide.
@@ -88,3 +89,6 @@ Use ArgoCD or `kubectl` to observe results.
 ---
 
 🎤 You’re ready to demo the future of AI-driven infrastructure.
+=======
+# devops-ai-stack
+>>>>>>> bd7b7e88bafa0f04f1dce9fadc86922d11423df0
