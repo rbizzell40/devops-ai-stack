@@ -12,7 +12,7 @@ spec:
     chart: cert-manager
     helm:
       valueFiles:
-      - global/values.yaml
+      - values.yaml
     repoURL: https://charts.jetstack.io
     targetRevision: v1.15.0
   syncPolicy:
