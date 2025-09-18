@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: { include "cert-manager.fullname" . }
+  labels:
+    {- include "cert-manager.labels" . | nindent 4 }
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {- include "cert-manager.selectorLabels" . | nindent 6 }
+  template:
+    metadata:
+      labels:
+        {- include "cert-manager.selectorLabels" . | nindent 8 }
+    spec:
+      containers:
+        - name: cert-manager
+          image: "nginx"
+          ports:
+            - containerPort: 80

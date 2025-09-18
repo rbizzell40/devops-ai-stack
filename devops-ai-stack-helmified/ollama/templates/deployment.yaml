@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: { include "ollama.fullname" . }
+  labels:
+    {- include "ollama.labels" . | nindent 4 }
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {- include "ollama.selectorLabels" . | nindent 6 }
+  template:
+    metadata:
+      labels:
+        {- include "ollama.selectorLabels" . | nindent 8 }
+    spec:
+      containers:
+        - name: ollama
+          image: "nginx"
+          ports:
+            - containerPort: 80

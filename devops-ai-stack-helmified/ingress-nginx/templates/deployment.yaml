@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: { include "ingress-nginx.fullname" . }
+  labels:
+    {- include "ingress-nginx.labels" . | nindent 4 }
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {- include "ingress-nginx.selectorLabels" . | nindent 6 }
+  template:
+    metadata:
+      labels:
+        {- include "ingress-nginx.selectorLabels" . | nindent 8 }
+    spec:
+      containers:
+        - name: ingress-nginx
+          image: "nginx"
+          ports:
+            - containerPort: 80

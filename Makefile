@@ -1,6 +1,6 @@
 # Makefile for devops-ai-stack
 
-CLUSTER_NAME=devops-ai-stack
+CLUSTER_NAME= ?= devops-ai-stack
 KIND_CONFIG=kind/kind-cluster.yaml
 
 .PHONY: help kind-up kind-delete bootstrap-argocd install-secrets deploy-mcp demo

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: { include "argocd.fullname" . }
+  labels:
+    {- include "argocd.labels" . | nindent 4 }
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {- include "argocd.selectorLabels" . | nindent 6 }
+  template:
+    metadata:
+      labels:
+        {- include "argocd.selectorLabels" . | nindent 8 }
+    spec:
+      containers:
+        - name: argocd
+          image: "nginx"
+          ports:
+            - containerPort: 80

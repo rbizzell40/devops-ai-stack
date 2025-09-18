@@ -92,3 +92,7 @@ Use ArgoCD or `kubectl` to observe results.
 =======
 # devops-ai-stack
 >>>>>>> bd7b7e88bafa0f04f1dce9fadc86922d11423df0
+
+
+kubectl -n argocd get secret argocd-initial-admin-secret \
+-o jsonpath="{.data.password}" | base64 -d && echo
