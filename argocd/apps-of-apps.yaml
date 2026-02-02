@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/rbizzell40/devops-ai-stack
     targetRevision: HEAD
-    path: applocations
+    path: applications
     directory:
       recurse: true
   destination:
