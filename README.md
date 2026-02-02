@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # 📊 DevOps AI Stack Demo: Narrated Walkthrough
 
 This guide supports the `devops-ai-stack-demo.pptx` presentation with talking points and explanations for each slide.

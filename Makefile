@@ -1,9 +1,9 @@
 # Makefile for devops-ai-stack
 
-CLUSTER_NAME= ?= devops-ai-stack
-KIND_CONFIG=kind/kind-cluster.yaml
+CLUSTER_NAME ?= devops-ai-stack
+KIND_CONFIG = kind/kind-cluster.yaml
 
-.PHONY: help kind-up kind-delete bootstrap-argocd install-secrets deploy-mcp demo
+.PHONY: help kind-up kind-delete bootstrap-argocd install-secrets deploy-mcp demo local-setup
 
 help:
 	@echo "Usage:"
@@ -13,6 +13,7 @@ help:
 	@echo "  make install-secrets     # Deploy ESO and inject secrets"
 	@echo "  make deploy-mcp          # Build and deploy MCP agent"
 	@echo "  make demo                # Run the demo script"
+	@echo "  make local-setup         # Full local setup: kind + ArgoCD + ESO + MCP"
 
 kind-up:
 	kind create cluster --name $(CLUSTER_NAME) --config $(KIND_CONFIG)
@@ -39,3 +40,6 @@ deploy-mcp:
 demo:
 	chmod +x ./demo.sh
 	./demo.sh
+
+local-setup: kind-up bootstrap-argocd install-secrets deploy-mcp
+	@echo "✅ Local DevOps + AI stack setup complete."
