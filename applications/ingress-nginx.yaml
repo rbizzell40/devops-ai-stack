@@ -24,3 +24,13 @@ spec:
     automated:
       prune: true
       selfHeal: true
+
+  ignoreDifferences:
+    - group: ""
+      kind: Service
+      jsonPointers:
+        - /status
+    - group: batch
+      kind: job
+      jsonPointers:
+        - /status
