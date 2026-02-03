@@ -11,8 +11,10 @@ spec:
   source:
     chart: argo-cd
     helm:
-      valueFiles:
-      - values.yaml
+      values:
+        server:
+          service:
+            type: NodePort
     repoURL: https://argoproj.github.io/argo-helm
     targetRevision: 5.51.6
   syncPolicy:
