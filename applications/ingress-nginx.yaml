@@ -20,6 +20,8 @@ spec:
           value: "true"
         - name: controller.serviceAccount.name
           value: ingress-nginx
+        - name: controller.service.type
+          value: NodePort
   syncPolicy:
     automated:
       prune: true
