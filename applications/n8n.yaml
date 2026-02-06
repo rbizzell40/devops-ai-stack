@@ -11,9 +11,9 @@ spec:
     server: https://kubernetes.default.svc
 
   source:
-    repoURL: https://community-charts.github.io/helm-charts
+    repoURL: https:/charts.n8n.io
     chart: n8n
-    targetRevision: 0.23.0
+    targetRevision: 9.3.2
 
   syncPolicy:
     automated:
