@@ -4,17 +4,17 @@ metadata:
   name: n8n
   namespace: argocd
 spec:
+  project: default
+
   destination:
     namespace: n8n
     server: https://kubernetes.default.svc
-  project: default
+
   source:
+    repoURL: https://community-charts.github.io/helm-charts
     chart: n8n
-    helm:
-      valueFiles:
-      - values.yaml
-    repoURL: https://n8n-io.github.io/n8n-helm-chart
     targetRevision: 0.23.0
+
   syncPolicy:
     automated:
       prune: true
