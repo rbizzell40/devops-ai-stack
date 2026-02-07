@@ -5,11 +5,9 @@ metadata:
   namespace: argocd
 spec:
   project: default
-
   destination:
     namespace: n8n
     server: https://kubernetes.default.svc
-
   source:
     repoURL: https://community-charts.github.io/helm-charts
     chart: n8n

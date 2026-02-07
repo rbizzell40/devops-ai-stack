@@ -4,17 +4,18 @@ metadata:
   name: ollama
   namespace: argocd
 spec:
+  project: default
   destination:
     namespace: ollama
     server: https://kubernetes.default.svc
-  project: default
   source:
+    repoURL: https://helm.otwld.com
     chart: ollama
+    targetRevision: 1.41.0
     helm:
-      valueFiles:
-      - values.yaml
-    repoURL: https://otwld.github.io/ollama-helm
-    targetRevision: 0.1.7
+      values: |
+        service:
+          type: ClusterIP
   syncPolicy:
     automated:
       prune: true

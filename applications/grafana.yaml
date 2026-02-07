@@ -10,9 +10,6 @@ spec:
   project: default
   source:
     chart: grafana
-    helm:
-      valueFiles:
-      - values.yaml
     repoURL: https://grafana.github.io/helm-charts
     targetRevision: 7.3.8
   syncPolicy:
