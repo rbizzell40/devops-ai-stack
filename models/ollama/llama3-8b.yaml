@@ -13,12 +13,12 @@ spec:
       restartPolicy: Never
       containers:
         - name: pull
-          image: ollama/ollama:0.1.32
-          command: ["ollama", "pull", "llama3:8b"]
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "1Gi"
-            limits:
-              cpu: "1"
-              memory: "2Gi"
+          image: ollama/ollama:0.15.4
+          command:
+            - sh
+            - -c
+            - |
+              ollama pull llama3:8b
+          env:
+            - name: OLLAMA_HOST
+              value: http://ollama:11434
