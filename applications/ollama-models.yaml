@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ollama-models
+  namespace: argocd
+spec:
+  project: default
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ollama
+
+  source:
+    repoURL: https://github.com/rbizzell40/devops-ai-stack
+    targetRevision: HEAD
+    path: models/ollama
+    directory:
+      recurse: true
+
+  syncPolicy:
+    automated:
+      prune: false       # IMPORTANT: do not prune completed Jobs
+      selfHeal: false
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+
+
+
+
+
+
+

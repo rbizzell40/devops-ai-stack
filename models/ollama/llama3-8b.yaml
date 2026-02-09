@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ollama-pull-llama3-8b
+  namespace: ollama
+  labels:
+    app: ollama
+    model: llama3-8b
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: pull
+          image: ollama/ollama:0.1.32
+          command: ["ollama", "pull", "llama3:8b"]
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1"
+              memory: "2Gi"
