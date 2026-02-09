@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ollama-pull-phi3-mini
+  namespace: ollama
+  labels:
+    app: ollama
+    model: phi-3-mini
+spec:
+  ttlSecondsAfterFinished: 3600
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: ollama
+        model: phi-3-mini
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: pull
+          image: ollama/ollama:0.1.32
+          command:
+            - ollama
+            - pull
+            - phi3:mini
+          env:
+            - name: OLLAMA_HOST
+              value: http://ollama:11434
