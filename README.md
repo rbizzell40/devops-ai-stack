@@ -1,98 +1,216 @@
-
-# 📊 DevOps AI Stack Demo: Narrated Walkthrough
-
-This guide supports the `devops-ai-stack-demo.pptx` presentation with talking points and explanations for each slide.
+# DevOps AI Stack
+**Local-First MLOps & AIOps Platform with Agentic LLM-Driven Remediation**
 
 ---
 
-## 🎬 Slide 1: Title
-**Welcome!** Today we’re introducing the **DevOps AI Stack**, an automation-first platform designed for secure, intelligent, and resilient infrastructure management.
+## 📌 What This Platform Is
+
+This project is a **production-oriented, local-first DevOps AI platform** designed to automate
+**first-level incident response** using Kubernetes-native GitOps practices and on-cluster LLMs.
+
+It focuses on:
+- Alert triage
+- Log summarization
+- Root cause reasoning
+- Safe, automated remediation
+- Human-in-the-loop escalation
+- Incident documentation (RCA / postmortem)
+
+All without sending data to external AI services.
 
 ---
 
-## ⚙️ Slide 2: Stack Overview
+## 🧠 Why These Components Were Chosen
 
-**What's included?**
+This stack is intentionally opinionated. Each component solves a specific problem in a way that
+scales cleanly from local development to production.
 
-- **ArgoCD** – GitOps deployment & drift detection.
-- **Helm** – All apps are defined and deployed via Helm.
-- **n8n** – The orchestration brain to trigger and chain actions.
-- **Ollama (LLM)** – Responds to prompts and suggests system actions.
-- **Prometheus + Grafana** – Observability and metrics.
-- **Ingress Controller** – NGINX or Traefik for exposing services.
-- **Cert-Manager** – Automatic TLS.
-- **ESO** – Secure secret handling from any backend.
-- **Slack & Telegram** – Alerting & feedback loop for human operators.
+### 🧭 Argo CD — GitOps Control Plane
 
----
+**Why Argo CD**
+- Declarative, auditable deployments
+- Clear separation between desired vs actual state
+- First-class Kubernetes-native GitOps
 
-## 🚨 Slide 3: Use Case – Automated Incident Response
+**What it does here**
+- Bootstraps the entire platform using an App-of-Apps pattern
+- Manages infrastructure, apps, and models from Git
+- Enforces consistency across environments
 
-Imagine a **high memory alert** fires:
-
-1. Prometheus triggers a **webhook**.
-2. **n8n** receives the event and sends prompt to Ollama.
-3. LLM recommends a **restart of a failing deployment**.
-4. n8n runs a **Kubernetes command** to fix the issue.
-5. Alert sent to **Slack & Telegram** for visibility.
-
-💡 No human intervention needed — but humans are notified.
+ArgoCD is the backbone that makes everything reproducible.
 
 ---
 
-## 🧱 Slide 4: Deployment Environments
+### 🤖 Ollama — Secure Local LLM Runtime
 
-This stack works **locally or at the edge**:
+**Why Ollama**
+- Runs fully on-cluster
+- No external API calls
+- Supports multiple models concurrently
+- Simple HTTP API
+- Easy to cache models locally
 
-- **KIND** – Great for testing, CI pipelines, and local demos.
-- **K3s** – Lightweight Kubernetes for edge, IoT, or VMs.
+**What it does here**
+- Executes LLM inference for automation workflows
+- Hosts multiple specialized models (reasoning vs summarization)
+- Acts as the AI decision engine for remediation
 
-Compatible with Ingress, TLS, ESO, GitOps.
+Ollama allows you to treat AI like infrastructure, not a SaaS dependency.
 
 ---
 
-## 🧪 Slide 5: Demo Script
+### 🔁 n8n — Automation & Orchestration Engine
 
-Run the full MCP pipeline using:
+**Why n8n**
+- Visual, auditable workflows
+- Easy API integrations
+- Kubernetes-friendly
+- Ideal for event-driven automation
 
-```bash
-./demo.sh
+**What it does here**
+- Receives alerts from Prometheus
+- Calls Ollama with structured prompts
+- Branches logic based on AI output
+- Triggers remediation scripts
+- Sends notifications
+- Creates tickets and documentation
+
+n8n is the glue between signals, AI, and actions.
+
+---
+
+### 📊 Prometheus — Monitoring & Alerting
+
+**Why Prometheus**
+- Industry standard for Kubernetes observability
+- Pull-based, reliable metrics
+- Powerful alerting model
+
+**What it does here**
+- Generates alerts that trigger AI workflows
+- Provides metrics for system health
+- (Planned) Model-level metrics for AI observability
+
+Prometheus supplies the signals that activate the AI.
+
+---
+
+### 📈 Grafana — Visualization & Insight
+
+**Why Grafana**
+- Best-in-class dashboards
+- Works natively with Prometheus
+- Useful for both humans and AI context
+
+**What it does here**
+- Visualizes infrastructure health
+- Displays alert history
+- (Planned) Shows AI decision metrics
+
+Grafana provides visibility and confidence.
+
+---
+
+### 🌐 Ingress NGINX — Traffic Entry Point
+
+**Why Ingress NGINX**
+- Battle-tested ingress controller
+- Wide ecosystem support
+- Works well locally and in production
+
+**What it does here**
+- Exposes ArgoCD, n8n, Grafana, Ollama (optional)
+- Provides a consistent access layer
+
+---
+
+### 🔐 cert-manager — TLS Automation
+
+**Why cert-manager**
+- Automates certificate lifecycle
+- Kubernetes-native CRDs
+- Production-ready TLS management
+
+**What it does here**
+- Manages TLS for ingress endpoints
+- Enables secure internal and external traffic
+
+---
+
+### 💬 Slack & Telegram Connectors — Human Notification
+
+**Why both**
+- Slack for enterprise on-call workflows
+- Telegram for lightweight / mobile alerts
+
+**What they do here**
+- Notify humans of incidents
+- Provide AI-generated summaries
+- Enable escalation when automation stops
+
+---
+
+## 📁 Repository Structure
+
+```
+.
+├── applications/              # ArgoCD Application definitions
+├── argocd/                    # App-of-Apps bootstrap
+├── models/
+│   └── ollama/                # GitOps-managed model pull Jobs
+├── mcp-agent/                 # Remediation logic & scripts
+├── devops-ai-stack-helmified/ # Optional internal Helm charts
+├── secrets/                   # ExternalSecrets definitions
+├── kind/                      # Local cluster config
+├── k3s/                       # Edge cluster config
+└── README.md
 ```
 
-- Fires a webhook (simulating alert)
-- n8n routes it to LLM and action chain
-- Kubernetes actions applied
-- Notifications sent
+---
 
-Use ArgoCD or `kubectl` to observe results.
+## 🤖 Model Strategy (GitOps)
+
+Models are treated as **versioned infrastructure artifacts**.
+
+### Current Models
+
+| Model | Purpose |
+|------|--------|
+| llama3:8b | Deep reasoning & remediation decisions |
+| phi3:mini | Fast alert classification & summaries |
+
+### Why GitOps for Models
+- Full auditability
+- Deterministic startup
+- No manual pulls
+- Easy rollback
+
+Models are pulled via Kubernetes Jobs and cleaned up using TTL.
 
 ---
 
-## 🔐 Slide 6: Security & Observability
+## 🧪 Execution Flow
 
-- All ingress traffic is encrypted (TLS via cert-manager)
-- Secrets are injected securely via **External Secrets Operator (ESO)**
-- Prometheus captures metrics
-- Grafana provides visualization dashboards
-- **GitOps ensures repeatability + auditability**
-
----
-
-## 💡 Slide 7: Why This Stack?
-
-- Works **entirely local** – no cloud dependencies
-- Uses **LLMs to act**, not just alert
-- Built for **production GitOps** and **local demoing**
-- Modular, pluggable, scalable
-- Built with **security, observability**, and **automation** in mind
+1. Prometheus fires an alert
+2. n8n workflow starts
+3. Ollama model is selected
+4. AI analyzes context
+5. Remediation is proposed or executed
+6. Notifications are sent
+7. Incident documentation is generated
 
 ---
 
-🎤 You’re ready to demo the future of AI-driven infrastructure.
-=======
-# devops-ai-stack
->>>>>>> bd7b7e88bafa0f04f1dce9fadc86922d11423df0
+## 🏁 Why This Architecture Matters
 
+This platform demonstrates:
+- Practical AIOps (not demos)
+- Secure, local-first AI usage
+- GitOps discipline
+- Clear separation of concerns
+- A realistic path to production
 
-kubectl -n argocd get secret argocd-initial-admin-secret \
--o jsonpath="{.data.password}" | base64 -d && echo
+It is designed to be **explained, defended, and extended**.
+
+---
+
