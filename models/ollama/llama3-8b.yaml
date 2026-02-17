@@ -3,11 +3,13 @@ kind: Job
 metadata:
   name: ollama-pull-llama3-8b
   namespace: ollama
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
   labels:
     app: ollama
     model: llama3-8b
 spec:
-  ttlSecondsAfterFinished: 3600
   backoffLimit: 3
   template:
     spec:

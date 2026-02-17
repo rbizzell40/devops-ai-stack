@@ -3,11 +3,13 @@ kind: Job
 metadata:
   name: ollama-pull-phi3-mini
   namespace: ollama
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
   labels:
     app: ollama
     model: phi-3-mini
 spec:
-  ttlSecondsAfterFinished: 3600
   backoffLimit: 3
   template:
     metadata:
