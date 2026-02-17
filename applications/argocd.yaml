@@ -11,7 +11,7 @@ spec:
   source:
     chart: argo-cd
     helm:
-      values:
+      values: |
         server:
           service:
             type: NodePort
