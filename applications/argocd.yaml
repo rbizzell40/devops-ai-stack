@@ -15,6 +15,12 @@ spec:
         server:
           service:
             type: NodePort
+        
+        repoServer:
+          service:
+            # Ensure the repo-server Service exposes 8081 and forwards to 8081
+            port: 8081
+            targetPort: 8081
     repoURL: https://argoproj.github.io/argo-helm
     targetRevision: 5.51.6
   syncPolicy:
